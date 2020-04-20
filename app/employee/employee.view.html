@@ -1,0 +1,13 @@
+﻿<div ng-controller="HomeController">
+    <h1>Olá {{vm.user.firstName}}!</h1>
+    <p>Você está logado!!</p>
+    <h3>Todos os funcionários registrados:</h3>
+    <ul>
+        <li ng-repeat="user in vm.allUsers">
+            {{user.username}} ({{user.firstName}} {{user.lastName}})
+            - <a ng-click="vm.deleteUser(user.id)">Delete</a>
+        </li>
+    </ul>
+    <p>&nbsp;</p>
+    <p><a href="#!/login" class="btn btn-primary">Logout</a></p>
+</div>
