@@ -1,13 +1,168 @@
-﻿<div ng-controller="HomeController">
+﻿<div class="container">
     <h1>Olá {{vm.user.firstName}}!</h1>
     <p>Você está logado!!</p>
-    <h3>Todos os funcionários registrados:</h3>
-    <ul>
-        <li ng-repeat="user in vm.allUsers">
-            {{user.username}} ({{user.firstName}} {{user.lastName}})
-            - <a ng-click="vm.deleteUser(user.id)">Delete</a>
-        </li>
-    </ul>
-    <p>&nbsp;</p>
     <p><a href="#!/login" class="btn btn-primary">Logout</a></p>
+    <p>&nbsp;</p>
+    <h2>Cadastro de Equipe</h2>
+    <form name="formTeam" ng-submit="vm.createTeam()" role="form">
+        <div class="form-group" ng-class="{ 'has-error': formTeam.name.$dirty && formTeam.name.$error.required }">
+            <label for="name">Nome:</label>
+            <input type="text" placeholder="Nome da equipe" name="name" id="name" class="form-control"
+                ng-model="vm.name" required />
+            <span ng-show="formTeam.name.$dirty && formTeam.name.$error.required" class="help-block">Um nome para a
+                equipe é
+                requerido</span>
+        </div>
+        <div class="form-actions">
+            <button type="submit" ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary">Salvar</button>
+            <img ng-if="vm.dataLoading"
+                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        </div> 
+        <div
+        ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }"
+        ng-if="flash" ng-bind="flash.message"></div>   
+    </form>
+    <div class="divTable blueTable">
+        <div class="divTableHeading">
+            <div class="divTableHead">Nome</div>
+            <div class="divTableHead">Data de criação</div>
+        </div>
+        <div class="divTableRow" ng-repeat="team in vm.allTeams">
+            <div class="divTableCell">{{ team.name }}</div>
+            <div class="divTableCell">{{ team.creationDate | date:"dd/MM/yyyy 'às' hh:mm" }}</div>
+        </div>
+    </div>
+
+    <p>&nbsp;</p>
+    <h2>Cadastro de Funcionário</h2>
+    <form name="formEmpl" ng-submit="vm.createEmployee()" role="form">
+        <div class="form-group"
+            ng-class="{ 'has-error': formEmpl.nameEmpl.$dirty && formEmpl.nameEmpl.$error.required }">
+            <label for="nameEmpl">Nome do funcionário:</label>
+            <input type="text" placeholder="Nome do funcionário" name="nameEmpl" id="nameEmpl" class="form-control"
+                ng-model="vm.nameEmpl" required />
+            <span ng-show="formEmpl.nameEmpl.$dirty && formEmpl.nameEmpl.$error.required" class="help-block">Um nome
+                para o funcionário é
+                requerido</span>
+        </div>
+        <div class="form-group"
+            ng-class="{ 'has-error': formEmpl.birthDate.$dirty && formEmpl.birthDate.$error.required }">
+            <label for="birthDate">Data de aniversário:</label>
+            <input type="date" placeholder="Data de aniversário" name="birthDate" id="birthDate" class="form-control"
+                ng-model="vm.birthDate" required />
+            <span ng-show="formEmpl.birthDate.$dirty && formEmpl.birthDate.$error.required" class="help-block">Data de
+                aniversário do funcionário é
+                requerida</span>
+        </div>
+        <div class="form-group"
+            ng-class="{ 'has-error': formEmpl.hiringDate.$dirty && formEmpl.hiringDate.$error.required }">
+            <label for="hiringDate">Data de contratação:</label>
+            <input type="date" placeholder="Data de contratação" name="hiringDate" id="hiringDate" class="form-control"
+                ng-model="vm.hiringDate" required />
+            <span ng-show="formEmpl.hiringDate.$dirty && formEmpl.hiringDate.$error.required" class="help-block">Data de
+                contratação do funcionário é
+                requerida</span>
+        </div>
+        <div class="form-group">
+            <label for="photo">Foto:</label>
+            <div class="img-container">
+                <div class="frame" ng-init="myImage = 'image.jpg'">
+                    <!--div img-src="image.jpg" fade-in="1" aspect-ratio="16:9"></div-->
+                    <img ng-src="{{myImage}}">
+                </div>
+            </div> 
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': formEmpl.teamName.$dirty && formEmpl.teamName.$error.required }">
+            <label for="teamName">Equipe:</label>
+            <select ng-model="vm.teamName" required>
+                <option value="">--Selecione uma Equipe--</option>
+                <option ng-repeat="team in vm.allTeams" value="{{vm.teamName}}">{{team.name}}</option>
+            </select>
+            <span ng-show="formEmpl.teamName.$dirty && formEmpl.teamName.$error.required" class="help-block">Seleção de
+                uma
+                equipe é requerida</span>
+        </div>
+        <h3>Endereço:</h3>
+        <div class="form-group" ng-class="{ 'has-error': formEmpl.street.$dirty && formEmpl.street.$error.required }">
+            <label for="street">Rua:</label>
+            <input type="text" placeholder="Rua" name="street" id="street" class="form-control" ng-model="vm.street"
+                required />
+            <span ng-show="formEmpl.street.$dirty && formEmpl.street.$error.required" class="help-block">Nome da rua é
+                requerido</span>
+        </div>
+        <div class="form-group"
+            ng-class="{ 'has-error': formEmpl.homeNumber.$dirty && formEmpl.homeNumber.$error.required }">
+            <label for="homeNumber">Número:</label>
+            <input type="text" placeholder="Número" name="homeNumber" id="homeNumber" class="form-control"
+                ng-model="vm.homeNumber" required />
+            <span ng-show="formEmpl.homeNumber.$dirty && formEmpl.homeNumber.$error.required" class="help-block">Um nome
+                para o funcionário é
+                requerido</span>
+        </div>
+        <div class="form-group"
+            ng-class="{ 'has-error': formEmpl.complement.$dirty && formEmpl.complement.$error.required }">
+            <label for="complement">Complemento:</label>
+            <input type="text" placeholder="Complemento" name="complement" id="complement" class="form-control"
+                ng-model="vm.complement" required />
+            <span ng-show="formEmpl.complement.$dirty && formEmpl.complement.$error.required"
+                class="help-block">Complemento
+                para do endereço é
+                requerido</span>
+        </div>
+        <div class="form-group"
+            ng-class="{ 'has-error': formEmpl.neighborhood.$dirty && formEmpl.neighborhood.$error.required }">
+            <label for="neighborhood">Bairro:</label>
+            <input type="text" placeholder="Bairro" name="neighborhood" id="neighborhood" class="form-control"
+                ng-model="vm.neighborhood" required />
+            <span ng-show="formEmpl.neighborhood.$dirty && formEmpl.neighborhood.$error.required" class="help-block">Um
+                nome
+                de
+                bairro é
+                requerido</span>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': formEmpl.city.$dirty && formEmpl.city.$error.required }">
+            <label for="city">Cidade:</label>
+            <input type="text" placeholder="Cidade" name="city" id="city" class="form-control" ng-model="vm.city"
+                required />
+            <span ng-show="formEmpl.city.$dirty && formEmpl.city.$error.required" class="help-block">Um nome de cidade é
+                requerido</span>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': formEmpl.state.$dirty && formEmpl.state.$error.required }">
+            <label for="state">Estado:</label>
+            <input type="text" placeholder="Estado" name="state" id="state" class="form-control" ng-model="vm.state"
+                required />
+            <span ng-show="formEmpl.state.$dirty && formEmpl.state.$error.required" class="help-block">O nome estadp é
+                requerido</span>
+        </div>
+        <div class="form-actions">
+            <button type="submit" ng-disabled="form.$invalid || vm.dataLoading" class="btn btn-primary">Salvar</button>
+            <img ng-if="vm.dataLoading"
+                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        </div>        
+        <!--input type="submit" class="btn btn-primary" value="Salvar" /-->
+    </form>
+    <div class="divTable blueTable">
+        <div class="divTableHeading">
+            <div class="divTableHead">Matrícula</div>
+            <div class="divTableHead">Nome</div>
+            <div class="divTableHead">Data de nascimento</div>
+            <div class="divTableHead">Data de contratação</div>
+            <div class="divTableHead">Rua</div>
+            <div class="divTableHead">Número</div>
+            <div class="divTableHead">Bairro</div>
+            <div class="divTableHead">Cidade</div>
+            <div class="divTableHead">Estado</div>
+        </div>
+        <div class="divTableRow" ng-repeat="employee in vm.allEmployees">
+            <div class="divTableCell">{{ employee.id }}</div>
+            <div class="divTableCell">{{ employee.name }}</div>
+            <div class="divTableCell">{{ employee.birthDate | date:"dd/MM/yyyy 'às' hh:mm" }}</div>
+            <div class="divTableCell">{{ employee.hiringDate | date:"dd/MM/yyyy 'às' hh:mm" }}</div>
+            <div class="divTableCell">{{ employee.address.street }}</div>
+            <div class="divTableCell">{{ employee.address.homeNumber }}</div>
+            <div class="divTableCell">{{ employee.address.neighborhood }}</div>
+            <div class="divTableCell">{{ employee.address.city }}</div>
+            <div class="divTableCell">{{ employee.address.state }}</div>
+        </div>
+    </div>
 </div>

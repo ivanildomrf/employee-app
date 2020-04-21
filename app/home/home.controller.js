@@ -16,19 +16,26 @@
         var vm = this;
 
         vm.user = null;
-        vm.allUsers = [];
-        vm.deleteUser = deleteUser;
+        vm.allTeams = [];
+        vm.allEmployees = [];
+        vm.createTeam = createTeam;
+        vm.createEmployee = createEmployee;
 
         initController();
 
         function initController() {
             loadCurrentUser();
-            loadAllUsers();
+            loadAllTeams();
+            loadAllEmployees();
         };
+
+        function getBaseURL() {
+            return $location.protocol() + "://" + $location.host() + ":8080";
+        };        
 
         function loadCurrentUser() {
 
-            var url = $location.protocol() + "://" + $location.host() + ":8080";
+            var url = getBaseURL();
 
             AuthenticationService.GetUserByUsername($rootScope.id, url, function (response) {
 
@@ -43,19 +50,91 @@
 
         };
 
-        function loadAllUsers() {
-            UserService.GetAll()
-                .then(function (users) {
-                    vm.allUsers = users;
-                });
+        function createTeam() {
+
+            vm.dataLoading = true;
+
+            var url = getBaseURL();
+            
+            AuthenticationService.CreateTeam(vm.name, url, function (response) {                
+                if (response.success) {
+                    loadAllTeams();
+                    FlashService.Success(response.message);
+                } else {
+                    FlashService.Error(response.message);
+                }
+
+            });
+
+            vm.dataLoading = false;
+        };        
+
+        function loadAllTeams() {
+
+            var url = getBaseURL();
+
+            AuthenticationService.LoadAllTeams(url, function (response) {
+
+                vm.allTeams = [];
+
+                if (response.success) {
+                   vm.allTeams = response.data;
+                } else {
+                    FlashService.Error(response.message);
+                }
+
+            });
         };
 
-        function deleteUser(id) {
-            UserService.Delete(id)
-                .then(function () {
-                    loadAllUsers();
-                });
-        };
+        function createEmployee() {
+
+            vm.dataLoading = true;
+
+            var url = getBaseURL();
+
+            var employee = {
+                name: vm.nameEmpl,
+                birthDate: vm.birthDate,
+                street: vm.street,
+                homeNumber: vm.homeNumber,
+                complement: vm.complement,
+                neighborhood: vm.neighborhood,
+                city: vm.city,
+                state: vm.state,
+                hiringDate: vm.hiringDate,
+                teamName: vm.teamName
+            };
+            
+            AuthenticationService.CreateEmployee(employee, url, function (response) {                
+                if (response.success) {
+                    loadAllEmployees();
+                    FlashService.Success(response.message);
+                } else {
+                    console.log('Message fail: '+ response.message);
+                    FlashService.Error(response.message);
+                }
+
+            });
+
+            vm.dataLoading = false;
+        };          
+
+        function loadAllEmployees() {
+
+            var url = getBaseURL();
+
+            AuthenticationService.LoadAllEmployees(url, function (response) {
+
+                vm.allEmployees = [];
+
+                if (response.success) {
+                   vm.allEmployees = response.data;
+                } else {
+                    FlashService.Error(response.message);
+                }
+
+            });            
+        };   
     }
 
 })();

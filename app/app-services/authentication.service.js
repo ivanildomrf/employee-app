@@ -17,6 +17,10 @@
         service.SetCredentials = SetCredentials;
         service.ClearCredentials = ClearCredentials;
         service.GetUserByUsername = GetUserByUsername;  
+        service.LoadAllTeams = LoadAllTeams;  
+        service.CreateTeam = CreateTeam;        
+        service.LoadAllEmployees = LoadAllEmployees;  
+        service.CreateEmployee = CreateEmployee;  
 
         return service;
 
@@ -141,7 +145,7 @@
                 callback(resp);
     
             }, function (response) {
-                
+
                 var message;
     
                 if (response.message !== null && response.status === 401) {
@@ -154,7 +158,96 @@
 
                 callback(resp);
             });
-        }          
+        }
+        
+        function CreateTeam(name, baseURL, callback) {
+
+            var resp;
+
+            var url = baseURL + '/api/team';
+
+            $http.post(url, {name}, 'application/javascript').then(function (response) {
+               
+                resp = { success: true, data: response.data, message: "Equipe criada com sucesso" };
+
+                callback(resp);                
+
+            }, function (response) {
+
+                resp = { success: false, message: "Ocorreu algum problema ao tentar criar a equipe" };
+
+                callback(resp);
+            });
+        }        
+
+        function LoadAllTeams(baseURL, callback) {
+
+            var resp;
+    
+            var url = baseURL + '/api/team/';
+    
+            return $http.get(url).then(function (response) {
+
+                resp = { success: true, data: response.data };
+                
+                callback(resp);
+    
+            }, function (response) {
+       
+                resp = { success: false, message: "Não foi possível efetuar a listagem das equipeas", status: response.status };
+
+                callback(resp);
+            });
+        } 
+
+        function CreateEmployee(employee, baseURL, callback) {
+
+            var resp;
+
+            var url = baseURL + '/api/employee';
+
+            $http.post(url, employee, 'application/javascript').then(function (response) {
+
+                console.log('Response success: '+ response.status);
+
+                var msg = "Funcionário criado com sucesso";
+               
+                resp = { success: true, data: response.data, message: msg };
+
+                callback(resp);                
+
+            }, function (response) {
+
+                console.log('Response fail: '+ response.status);
+
+                var msg = "Ocorreu algum problema ao tentar criar o funcionário";
+
+                resp = { success: false, message: msg };
+
+                callback(resp);
+            });
+        }         
+
+        function LoadAllEmployees(baseURL, callback) {
+
+            var resp;
+    
+            var url = baseURL + '/api/employee/';
+    
+            return $http.get(url).then(function (response) {
+
+                resp = { success: true, data: response.data };
+                
+                callback(resp);
+    
+            }, function (response) {
+       
+                resp = { success: false, message: "Não foi possível efetuar a listagem dos funcionários", status: response.status };
+
+                callback(resp);
+            });
+        }                 
+        
     }  
 
     // Base64 encoding service used by AuthenticationService
